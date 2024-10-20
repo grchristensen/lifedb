@@ -3,3 +3,7 @@
 __author__ = """Gage Christensen"""
 __email__ = "49492919+grchristensen@users.noreply.github.com"
 __version__ = "0.1.0"
+
+
+class DBError(Exception):
+    """Exception class for any errors managing the LifeDB."""

@@ -29,7 +29,9 @@ Python code for processing data from finance/health/journaling/etc. apps and con
 
 ```
 ├── docs               <- Project documentation (mkdocs).
-├── lifedb               <- Package code.
+├── lifedb             <- Package code.
+├── scripts            <- Scripts for completing miscellaneous tasks.
+│   └── spinup_db.py
 ├── tests              <- Package code.
 ├── README.md          <- The top-level README for developers using this project.
 └── CONTRIBUTING.md    <- Contributing guidelines for this project.
