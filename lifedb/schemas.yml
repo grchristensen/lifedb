@@ -1,2 +1,4 @@
 schemas:
   - import_zone
+
+  - sample

@@ -31,6 +31,14 @@ def main():
     for schema in schema_yaml["schemas"]:
         db.execute(f"create schema {schema}")
 
+    create_tables_sql = (
+        files("lifedb.sql").joinpath("create_sample_tables.sql").read_text()
+    )
+    load_data_sql = files("lifedb.sql").joinpath("load_sample_data.sql").read_text()
+
+    db.sql(create_tables_sql)
+    db.sql(load_data_sql)
+
 
 if __name__ == "__main__":
     load_dotenv(find_dotenv())
