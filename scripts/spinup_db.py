@@ -2,7 +2,9 @@ import os
 from pathlib import Path
 
 import duckdb
+import yaml
 from dotenv import find_dotenv, load_dotenv
+from importlib_resources import files
 
 from lifedb import DBError
 
@@ -21,7 +23,13 @@ def main():
 
     # Connecting to a DuckDB database will automatically create one if it does not
     # exist.
-    duckdb.connect(db_path)
+    db = duckdb.connect(db_path)
+
+    schema_yaml = files("lifedb").joinpath("schemas.yml").read_text()
+    schema_yaml = yaml.safe_load(schema_yaml)
+
+    for schema in schema_yaml["schemas"]:
+        db.execute(f"create schema {schema}")
 
 
 if __name__ == "__main__":
