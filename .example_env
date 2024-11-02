@@ -16,4 +16,17 @@
 #
 # DO NOT ADD THIS FILE TO VERSION CONTROL!
 
-LIFEDB_DB_PATH=devdb/db.duckdb
+# Credentials for the PostgreSQL server
+LIFEDB_DB_USER=lifedbdev
+LIFEDB_DB_PASSWORD=
+
+# PostgreSQL server host/port
+LIFEDB_DB_HOST=127.0.0.1
+LIFEDB_DB_PORT=5432
+
+LIFEDB_DB_NAME=lifedbdev
+
+# If initializing database, specify the database to connect to during
+# the initialization (has to be a different database than the target
+# database).
+LIFEDB_INIT_DB_NAME=postgres

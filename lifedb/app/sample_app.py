@@ -1,15 +1,15 @@
 """Sample Dash application using example HR data."""
 
 import os
-from pathlib import Path
 
-import duckdb
 import numpy as np
+import pandas as pd
 import plotly.express as px
+import psycopg
 from dash import Dash, Input, Output, callback, dash_table, dcc, html
 from dotenv import find_dotenv, load_dotenv
 
-from lifedb import DBError
+from lifedb.exceptions import DBError
 
 DATA_SQL = """
 select
@@ -47,20 +47,42 @@ left join sample.employees as mans
 load_dotenv(find_dotenv())
 
 
-db_path_str = os.getenv("LIFEDB_DB_PATH")
+def get_db_env_var(env_var_name: str) -> str:
+    """Handle errors when environment variable is not populated."""
+    env_var = os.getenv(env_var_name)
 
-if db_path_str is None:
-    raise KeyError("Missing required environment variable: LIFEDB_DB_PATH")
+    if env_var is None:
+        raise DBError(
+            f"Missing environment variable {env_var_name} required for database "
+            "connection."
+        )
 
-db_path = Path(db_path_str)
+    return env_var
 
-if not db_path.exists():
-    raise DBError(f"Database does not exist at {db_path}")
 
-con = duckdb.connect(db_path)
+db_user = get_db_env_var("LIFEDB_DB_USER")
+db_password = get_db_env_var("LIFEDB_DB_PASSWORD")
+db_host = get_db_env_var("LIFEDB_DB_HOST")
+db_port = get_db_env_var("LIFEDB_DB_PORT")
+db_name = get_db_env_var("LIFEDB_DB_NAME")
 
-data = con.sql(DATA_SQL).df()
+con = psycopg.connect(
+    user=db_user,
+    password=db_password,
+    host=db_host,
+    port=db_port,
+    dbname=db_name,
+    autocommit=True,
+)
+cur = con.cursor()
 
+cur.execute(DATA_SQL)
+sql_results = cur.fetchall()
+if cur.description is None:
+    raise ValueError()
+data = pd.DataFrame(sql_results, columns=[desc[0] for desc in cur.description])
+
+cur.close()
 con.close()
 
 data["employee_name"] = data["employee_first_name"] + " " + data["employee_last_name"]
