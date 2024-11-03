@@ -25,6 +25,8 @@ python = ">=3.9,<4.0"
 
 black  = { version = "^24.4.2", optional = true}
 bump2version = {version = "^1.0.1", optional = true}
+dagster = { version = "1.9.0" }
+dagster-webserver = { version = "1.9.0" }
 dash = { version = "^2.18.1" }
 importlib-resources = { version = "^6.4.5" }
 isort  = { version = "^5.8.0", optional = true}
@@ -116,3 +118,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 lifedb = "lifedb:main"
+
+[tool.dagster]
+module_name = "lifedb.dagster.definitions"
+code_location_name = "lifedb.dagster"
