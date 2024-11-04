@@ -99,6 +99,43 @@ def _parse_buxfer_api_data(api_json, *, camelcase_renames, schema) -> pl.DataFra
     return df
 
 
+def _unnest_all_structs(df: pl.DataFrame) -> pl.DataFrame:
+    struct_fields = {
+        field_name: field_datatype
+        for field_name, field_datatype in df.schema.items()
+        if isinstance(field_datatype, pl.datatypes.Struct)
+    }
+
+    unnested_df = df.with_columns(
+        *[
+            pl.col(field_name).name.prefix_fields(field_name + "_")
+            for field_name in struct_fields.keys()
+        ]
+    ).unnest(list(struct_fields.keys()))
+
+    return unnested_df
+
+
+def _join_all_string_lists(df: pl.DataFrame) -> pl.DataFrame:
+    list_fields = {
+        field_name: field_datatype
+        for field_name, field_datatype in df.schema.items()
+        if (
+            isinstance(field_datatype, pl.datatypes.List)
+            and field_datatype.inner == pl.datatypes.String
+        )
+    }
+
+    joined_df = df.with_columns(
+        *[
+            pl.col(field_name).list.join(separator=",")
+            for field_name in list_fields.keys()
+        ]
+    )
+
+    return joined_df
+
+
 def get_buxfer_transactions(
     *,
     start_date: Optional[date] = None,
@@ -145,6 +182,8 @@ def get_buxfer_transactions(
             camelcase_renames=BUXFER_API_TRANSACTIONS_CAMELCASE_RENAMES,
             schema=BUXFER_API_TRANSACTIONS_SCHEMA,
         )
+        page_transactions = _unnest_all_structs(page_transactions)
+        page_transactions = _join_all_string_lists(page_transactions)
 
         return response_transaction_count, page_transactions
 
