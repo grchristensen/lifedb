@@ -46,7 +46,9 @@ def get_db_connection_uri() -> str:
     )
 
 
-def try_get_table(table_name: str, *, schema: Optional[str] = None) -> pl.DataFrame:
+def try_get_table(
+    table_name: str, *, schema: Optional[str] = None
+) -> Optional[pl.DataFrame]:
     """Attempt to retrieve the given table, or return None if it does not exist."""
     with get_db_connection() as con:
         if schema is None:

@@ -50,7 +50,7 @@ def buxfer_api_transactions(config: BuxferAPITransactionsConfig):
         transactions = pl.concat(
             [
                 current_transactions.filter(
-                    pl.col("id").is_in(new_transactions.select(pl.col("id"))).not_()
+                    pl.col("id").is_in(new_transactions["id"]).not_()
                 ),
                 new_transactions,
             ]
