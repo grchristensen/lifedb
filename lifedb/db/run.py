@@ -8,7 +8,7 @@ import yaml
 from importlib_resources import files
 from psycopg import sql
 
-from lifedb.exceptions import DBError
+from lifedb.core.exceptions import DBError
 
 db_typer_app = typer.Typer()
 

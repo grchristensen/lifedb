@@ -9,7 +9,7 @@ import psycopg
 from dash import Dash, Input, Output, callback, dash_table, dcc, html
 from dotenv import find_dotenv, load_dotenv
 
-from lifedb.exceptions import DBError
+from lifedb.core.exceptions import DBError
 
 DATA_SQL = """
 select

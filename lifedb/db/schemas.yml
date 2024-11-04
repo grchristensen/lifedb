@@ -2,3 +2,9 @@ schemas:
   - import_zone
 
   - sample
+
+  - landing
+
+  - analytics
+
+  - app

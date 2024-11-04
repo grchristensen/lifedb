@@ -30,3 +30,10 @@ LIFEDB_DB_NAME=lifedbdev
 # the initialization (has to be a different database than the target
 # database).
 LIFEDB_INIT_DB_NAME=postgres
+
+# Make the appropriate request to https://www.buxfer.com/api/login/
+# to retrieve this token. https://www.buxfer.com/help/api#login
+LIFEDB_BUXFER_API_TOKEN=
+
+# Can delete this environment variable if you would like set to 0.
+LIFEDB_DAGSTER_LOOKBACK_DAYS=7
