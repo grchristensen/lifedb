@@ -2,7 +2,6 @@
 
 import os
 
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import psycopg
@@ -88,7 +87,7 @@ con.close()
 data["employee_name"] = data["employee_first_name"] + " " + data["employee_last_name"]
 data["tenure"] = (
     data["data_as_of_date"] - data["employee_hire_date"]
-) / np.timedelta64(1, "Y")
+) / pd.to_timedelta(365, "days")
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 sample_app = Dash(external_stylesheets=external_stylesheets)

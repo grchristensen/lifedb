@@ -61,3 +61,22 @@ def buxfer_api_transactions(config: BuxferAPITransactionsConfig):
         connection=core.db.get_db_connection_uri(),
         if_table_exists="replace",
     )
+
+
+@asset(deps=[buxfer_api_transactions])
+def financial_transactions():
+    """Consolidated transactions affecting personal finance."""
+    with core.db.get_db_connection() as con:
+        buxfer_api_transactions = pl.read_database(
+            "select * from landing.buxfer_api_transactions", connection=con
+        )
+
+    financial_transactions = core.transform.conform_buxfer_api_transactions(
+        buxfer_api_transactions
+    )
+
+    financial_transactions.write_database(
+        "analytics.financial_transactions",
+        connection=core.db.get_db_connection_uri(),
+        if_table_exists="replace",
+    )
